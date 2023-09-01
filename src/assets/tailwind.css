@@ -3,3 +3,31 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.btn {
+  @apply flex items-center justify-center px-3 py-2 bg-primary text-white rounded-xl m-1 select-none hover:bg-primary-600 duration-500 text-sm transform transition-all font-medium;
+  box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.35);
+}
+.btn:active {
+  animation: button-pop 0.25s ease-out;
+}
+
+.bg-main {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    url("bg-main.webp");
+  @apply bg-slate-950/90 bg-center bg-cover;
+}
+
+@keyframes button-pop {
+  0% {
+    transform: scale(var(--btn-focus-scale, 0.98));
+  }
+
+  40% {
+    transform: scale(1.02);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
