@@ -3,6 +3,11 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      animation: {
+        "loading-1": "scale .8s ease infinite",
+        "loading-2": "scale .8s ease .2s infinite",
+        "loading-3": "scale .8s ease .4s infinite",
+      },
       colors: {
         primary: {
           DEFAULT: "#E25E3E",

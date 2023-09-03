@@ -31,3 +31,13 @@
     transform: scale(1);
   }
 }
+
+@keyframes scale {
+  50% {
+    height: 25px;
+  }
+
+  0% {
+    height: 5px;
+  }
+}

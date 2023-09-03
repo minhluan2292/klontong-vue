@@ -7,7 +7,8 @@
       </h2>
     </div>
     <div class="bg-white rounded-2xl px-4 py-3 flex justify-center active:outline-none">
-      <input class="outline-none" />
+      <input class="outline-none" v-model="query" @keydown.enter="search" />
+      <button class="w-6 h-6" @click="search"><img src="/assets/search.svg" /></button>
     </div>
   </div>
 </template>
@@ -17,5 +18,15 @@
 
 export default {
   name: 'HomeView',
+  data: function () {
+    return {
+      query: ''
+    };
+  },
+  methods: {
+    search() {
+      this.$router.push({ path: '/product', query: { q: this.query } });
+    }
+  }
 }
 </script>

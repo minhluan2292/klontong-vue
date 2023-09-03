@@ -32,16 +32,16 @@
                 </div>
             </div>
             <div v-if="products.length > 0" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-4">
-                <a href="/product/1" class="border-[1px] rounded-xl flex flex-col" v-for="product in products"
-                    :key="product" title="KitKat 150gr">
+                <router-link :to="`/product/${product.id}`" class="border-[1px] rounded-xl flex flex-col"
+                    v-for="product in products" :key="product" title="KitKat 150gr">
                     <div class=" ">
-                        <img src="https://s3.bukalapak.com/img/31437933103/s-463-463/data.png.webp" class="rounded-t-xl" />
+                        <img :src="product.image" class="rounded-t-xl w-full aspect-square object-contain" loading="lazy" />
                     </div>
                     <div class="p-3 rounded-b-xl border-t-[1px]">
-                        <p class="font-semibold">KitKat 150gr</p>
-                        <p class="text-sm">IDR 15.000</p>
+                        <p class="font-semibold">{{ product.name }}</p>
+                        <p class="text-sm">{{ toRupiah(product.price) }}</p>
                     </div>
-                </a>
+                </router-link>
 
             </div>
         </div>
@@ -50,18 +50,32 @@
 
 
 <script>
+import { toRupiah } from '@/utils/formatter.js';
+
 // @ is an alias to /src
 
 export default {
     name: 'ProductView',
-    data: function () {
-        return {
-
-            products: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '7', '6', '5', '5',]
-
-
-
+    methods: {
+        getProducts() {
+            this.$store.dispatch('fetchProducts');
+        },
+        toRupiah(nominal = 0) {
+            return toRupiah(nominal);
         }
+    },
+    computed: {
+        products() {
+            return this.$store.state.products.data;
+        }
+    },
+    mounted() {
+
+        const { q } = this.$route.query;
+        if (q) this.$store.commit('setProductsSearch', {
+            query: q
+        });
+        this.getProducts();
     }
 }
 </script>
