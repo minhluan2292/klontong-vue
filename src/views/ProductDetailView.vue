@@ -16,7 +16,7 @@
         <ErrorComponent />
     </div>
     <main v-if="!isLoading && !isNotFound && !isError"
-        class="flex flex-col md:flex-row max-w-7xl mx-auto pt-24 gap-8 px-6 md:px-0 py-10">
+        class="flex flex-col md:flex-row md:max-w-5xl lg:max-w-7xl mx-auto pt-24 gap-8 px-6 md:px-3 py-10">
         <div class="flex-[2_2_0%]">
             <div class="border-2 rounded-md">
                 <img :src="product.image" class="rounded-md" />
@@ -130,7 +130,7 @@ const subtotal = computed(() => product.value.price * qty.value);
 const addToCart = () => {
     if (isLoading.value === true || isNotFound.value === true) return;
     const { name, id, price, image } = product.value;
-    console.log(image);
+    // console.log(image);
     store.dispatch('addToCart', {
         name, id, price, image, qty: qty.value
     });
@@ -142,9 +142,13 @@ const addToCart = () => {
 onMounted(() => {
     const { id } = route.params;
     getProductDetail(id).then((result) => {
-        console.log(result.data.data);
+        // console.log(result.data.data);
         if (!result.data.data) isNotFound.value = true;
-        else product.value = result.data.data;
+        else {
+            product.value = result.data.data;
+            document.title = product.value.name;
+        }
+
     }).catch((err) => {
         console.log(err);
         isError.value = true;

@@ -3,7 +3,8 @@
     <div v-if="!isLoading && isError" class="h-screen w-screen flex items-center justify-center">
         <ErrorComponent />
     </div>
-    <main v-if="!isLoading && !isError" class="flex flex-col md:flex-row max-w-7xl mx-auto pt-3 md:pt-24 gap-2 md:gap-8">
+    <main v-if="!isLoading && !isError"
+        class="flex flex-col md:flex-row md:max-w-5xl  lg:max-w-7xl mx-auto pt-3 md:pt-24 gap-2 md:gap-8 px-3">
         <div class="flex-1 sticky p-4 md:p-0">
             <div class=" border-[1px] rounded-lg p-3 select-none mt-16">
                 <!-- <h1 class='font-medium'>Search</h1>
@@ -33,7 +34,7 @@
         </div>
         <div class="flex-[3_3_0%] bg-blue  p-4 md:p-0">
             <div class="h-16 flex justify-between items-center">
-                <p>Showing <b>2</b> results (1-10) from 2</p>
+                <p>Showing <b>{{ products.length }}</b> results</p>
             </div>
             <div v-if="isNotFound">
                 <div class="flex items-center gap-4">
@@ -44,7 +45,8 @@
                     </div>
                 </div>
             </div>
-            <div v-if="products.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-4">
+            <div v-if="products.length > 0"
+                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-4">
                 <router-link :to="`/product/${product.id}`" class="border-[1px] rounded-xl flex flex-col"
                     v-for="product in products" :key="product" title="KitKat 150gr">
                     <div class=" ">
@@ -57,6 +59,7 @@
                 </router-link>
 
             </div>
+            <div class="mb-10"></div>
         </div>
     </main>
 </template>
@@ -76,7 +79,6 @@ export default {
     }),
     methods: {
         getProducts() {
-
             const { q = "", orderBy = "id" } = this.$route.query;
             if (q) this.$store.commit('setProductsSearch', {
                 query: q,
