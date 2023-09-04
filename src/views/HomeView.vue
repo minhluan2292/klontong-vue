@@ -25,6 +25,7 @@ export default {
   },
   methods: {
     search() {
+      if (this.query.length < 1) return;
       this.$router.push({ path: '/product', query: { q: this.query } });
     }
   }

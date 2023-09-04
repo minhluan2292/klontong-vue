@@ -8,16 +8,20 @@ export default createStore({
     products: {
       search: {
         query: "",
-        sortBy: "",
+        orderBy: "id",
         page: 1,
       },
       data: [],
       isLoading: false,
+      isNotFound: true,
       isError: false,
     },
     cart: [],
   },
   // getters: {
+  //   productStatus(){
+
+  //   }
   // },
   mutations: {
     setProductsList(state, param) {
@@ -27,6 +31,17 @@ export default createStore({
       state.products.search = {
         ...state.products.search,
         ...param,
+      };
+    },
+    setProductsStatus(
+      state,
+      { isLoading = false, isNotFound = false, isError = false }
+    ) {
+      state.products = {
+        ...state.products,
+        isError,
+        isLoading,
+        isNotFound,
       };
     },
     addToCart(state, payload) {
@@ -42,11 +57,26 @@ export default createStore({
   actions: {
     async fetchProducts(store) {
       try {
-        const { query } = store.state.products.search;
-        const result = await getProducts(1, 10, query);
+        store.commit("setProductsStatus", { isLoading: true });
+        const { query, orderBy } = store.state.products.search;
+        const result = await getProducts({
+          page: 1,
+          limit: 10,
+          query,
+          orderBy,
+        });
+        if (!result.data.data || result.data.data.length < 1) {
+          store.commit("setProductsList", []);
+          return store.commit("setProductsStatus", { isNotFound: true });
+        }
         store.commit("setProductsList", result.data.data);
+        return store.commit("setProductsStatus", { isLoading: false });
       } catch (error) {
         console.log(error);
+        return store.commit("setProductsStatus", {
+          isLoading: false,
+          isError: true,
+        });
       }
     },
     addToCart({ commit }, { id, name, price, qty }) {

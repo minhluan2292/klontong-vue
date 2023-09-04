@@ -1,11 +1,25 @@
 
 <template>
-    <LoadingComponent v-if="isLoading" />
+    <ModalComponent :isOpen="msg !== ''" :onClose="closeMsg">
+        <div class="flex flex-col items-center h-full justify-center text-center gap-4">
+            <p class="font-medium">
+                {{ msg }}
+            </p>
+            <button class="btn" @click="closeMsg">Ok</button>
+
+        </div>
+    </ModalComponent>
+    <LoadingView v-if="isLoading" />
     <NotFoundComponent v-if="isNotFound && !isLoading" />
-    <main v-if="!isLoading && !isNotFound" class="flex max-w-7xl mx-auto pt-24 gap-8">
+
+    <div v-if="!isLoading && isError" class="h-screen w-screen flex items-center justify-center">
+        <ErrorComponent />
+    </div>
+    <main v-if="!isLoading && !isNotFound && !isError"
+        class="flex flex-col md:flex-row max-w-7xl mx-auto pt-24 gap-8 px-6 md:px-0 py-10">
         <div class="flex-[2_2_0%]">
-            <div class="border-2">
-                <img :src="product.image" />
+            <div class="border-2 rounded-md">
+                <img :src="product.image" class="rounded-md" />
             </div>
 
         </div>
@@ -25,7 +39,7 @@
                     `${product.width}cm x ${product.length}cm x ${product.height}cm`
                 }}</p>
                 <p><span class="text-gray-500">Berat:</span> {{ product.weight }}gr</p>
-                <p>{{ product.description }}</p>
+                <p>{{ (product.description) }}</p>
             </div>
         </div>
         <div class="flex-[2_2_0%]">
@@ -67,35 +81,40 @@ import {
 
 import { useRoute } from 'vue-router';
 
-import LoadingComponent from '@/components/LoadingComponent.vue';
+import ErrorComponent from '@/components/ErrorComponent.vue';
+import ModalComponent from '@/components/ModalComponent.vue';
 import NotFoundComponent from '@/components/NotFoundComponent.vue';
 import store from '@/store';
-import { toRupiah } from '@/utils/formatter';
+import {
+    nl2br,
+    toRupiah,
+} from '@/utils/formatter';
 import { getProductDetail } from '@/utils/https/product';
+import LoadingView from '@/views/LoadingView.vue';
 
 const route = useRoute();
-
-const getCart = computed(() => store.state.cart);
 
 const isLoading = ref(true);
 const isNotFound = ref(false);
 const isError = ref(false);
+const msg = ref("");
+const closeMsg = () => msg.value = "";
 const product = ref({
     category: {
         name: "",
         id: ""
     },
-    categoryId: 1,
-    description: "Roti manis yang lembut berisi Cokelat dari Sari Roti. Enak, mengenyangkan, dan praktis. Bisa untuk camilan dan teman beraktivitas.",
-    height: 200,
-    id: 4,
-    image: "https://ik.imagekit.io/sxqf7y8p3/product-ZIkMAb_Yx70m-1zW",
-    length: 20,
-    name: "Sari Roti Isi Coklat",
-    price: 7500,
-    sku: "SRIROT123",
-    weight: 12,
-    width: 20,
+    categoryId: 0,
+    description: "",
+    height: 0,
+    id: 0,
+    image: "",
+    length: 0,
+    name: "",
+    price: 0,
+    sku: "",
+    weight: 0,
+    width: 0,
 });
 const qty = ref(1);
 const max = 30000;
@@ -114,6 +133,7 @@ const addToCart = () => {
     store.dispatch('addToCart', {
         name, id, price, qty: qty.value
     });
+    msg.value = "Product telah berhasil ditambahkan ke keranjang";
 }
 
 // @ is an alias to /src
@@ -126,6 +146,7 @@ onMounted(() => {
         else product.value = result.data.data;
     }).catch((err) => {
         console.log(err);
+        isError.value = true;
     }).finally(() => {
         isLoading.value = false;
     })
