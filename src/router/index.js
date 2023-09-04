@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import NotFoundComponentVue from "@/components/NotFoundComponent.vue";
 
+import CartView from "../views/CartView.vue";
 import HomeView from "../views/HomeView.vue";
 import ProductDetailView from "../views/ProductDetailView.vue";
 import ProductView from "../views/ProductView.vue";
@@ -26,6 +27,11 @@ const routes = [
         component: ProductDetailView,
       },
     ],
+  },
+  {
+    path: "/cart",
+    name: "cart",
+    component: CartView,
   },
   { path: "/:catchAll(.*)", component: NotFoundComponentVue },
 ];

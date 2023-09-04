@@ -17,14 +17,17 @@
             </div>
             <div class="flex-1 flex justify-end items-center gap-2">
                 <div v-if="showSearch" class="border-[1px] rounded-md py-1 px-2 items-center hidden md:flex">
-                    <input v-model="keyword" @keydown.enter="changeKeyword" class="outline-none" />
+                    <input v-model="keyword" @keydown.enter="changeKeyword" class="outline-none"
+                        placeholder="Cari produk disini" />
                     <button @click="changeKeyword">
                         <img src="/assets/search.svg" class="w-5 h-5" />
                     </button>
                 </div>
-                <button class="btn">
-                    <img src="/assets/trolley.svg" class="h-5 w-5" />
-                </button>
+                <router-link to="/cart">
+                    <button class="btn">
+                        <img src="/assets/trolley.svg" class="h-5 w-5" />
+                    </button>
+                </router-link>
             </div>
         </nav>
     </header>

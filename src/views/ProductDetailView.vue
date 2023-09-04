@@ -129,9 +129,10 @@ const subtotal = computed(() => product.value.price * qty.value);
 
 const addToCart = () => {
     if (isLoading.value === true || isNotFound.value === true) return;
-    const { name, id, price } = product.value;
+    const { name, id, price, image } = product.value;
+    console.log(image);
     store.dispatch('addToCart', {
-        name, id, price, qty: qty.value
+        name, id, price, image, qty: qty.value
     });
     msg.value = "Product telah berhasil ditambahkan ke keranjang";
 }

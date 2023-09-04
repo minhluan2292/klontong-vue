@@ -4,7 +4,16 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+
+import { useStore } from 'vuex';
+
 import HeaderComponent from './components/HeaderComponent.vue';
+
+const store = useStore();
+onMounted(() => {
+  store.dispatch('fetchSuggestions');
+})
 </script>
 
 <style>
